@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.larswerkman.holocolorpicker.ColorPicker
+        android:id="@+id/picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlePartyFreak" />
+
+    <com.larswerkman.holocolorpicker.SVBar
+        android:id="@+id/svbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/picker"
+        app:layout_constraintStart_toStartOf="@+id/picker"
+        app:layout_constraintTop_toBottomOf="@+id/picker" />
+
+    <com.larswerkman.holocolorpicker.ValueBar
+        android:id="@+id/valuebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/svbar"
+        app:layout_constraintStart_toStartOf="@+id/svbar"
+        app:layout_constraintTop_toBottomOf="@+id/svbar" />
+
+    <TextView
+        android:id="@+id/titlePartyFreak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Party Freak"
+        android:textColor="#E91E63"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/picker"
+        app:layout_constraintStart_toStartOf="@+id/picker"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/colorValueLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Color Value"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/valuebar"
+        app:layout_constraintTop_toBottomOf="@+id/valuebar" />
+
+    <TextView
+        android:id="@+id/colorValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="dd"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/valuebar"
+        app:layout_constraintTop_toBottomOf="@+id/valuebar" />
+
+    <Switch
+        android:id="@+id/ledControl"
+        android:layout_width="73dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="20dp"
+        android:text="LED"
+        app:layout_constraintStart_toStartOf="@+id/colorValueLabel"
+        app:layout_constraintTop_toBottomOf="@+id/colorValueLabel" />
+
+    <Switch
+        android:id="@+id/musicGhost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Music Ghost"
+        app:layout_constraintEnd_toEndOf="@+id/colorValue"
+        app:layout_constraintTop_toBottomOf="@+id/colorValue" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="41dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/glasses_icon" />
+
+    <TextView
+        android:id="@+id/batteryStatus"
+        android:layout_width="24dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="100%"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="51dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/select_device" />
+
+    <TextView
+        android:id="@+id/selectDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Devices"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="272dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Blink Speed"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/musicGhost"
+        app:layout_constraintStart_toStartOf="@+id/ledControl"
+        app:layout_constraintTop_toBottomOf="@+id/musicGhost" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
