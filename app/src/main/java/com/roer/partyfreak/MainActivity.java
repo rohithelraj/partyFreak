@@ -3,11 +3,13 @@ package com.roer.partyfreak;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.graphics.ColorUtils;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,11 +28,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity implements ColorPicker.OnColorChangedListener {
-    public static int currentColorValue = 0;
+public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_BT = 1;
+    private static BluetoothSocket mainSocket;
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private Handler handler;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
         picker.setOldCenterColor(picker.getColor());
         // adds listener to the colorpicker which is implemented
         //in the activity
-        picker.setOnColorChangedListener(this);
+
         //to turn of showing the old color
         picker.setShowOldCenterColor(false);
         TextView colorValue = findViewById(R.id.colorValue);
@@ -56,8 +57,17 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
         mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorValue.setText(""+picker.getColor());
+
+                String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
+
+                colorValue.setText(rgbValue);
+                //picker.getOnColorChangedListener();
+                setColorInDevice(rgbValue);
             }
+
+
+
+
         });
         ImageView bluetoothDevices = findViewById(R.id.bluetoothDevices);
         bluetoothDevices.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +77,15 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
             }
         });
     }
+    public void setColorInDevice(String rgbValue) {
+        if(mainSocket.isConnected()){
+            new ConnectedThread(mainSocket,rgbValue+")").run();
+        }
+        else{
+            onBluettothClick();
+        }
+    }
+
     public void onBluettothClick(){
         if (bluetoothAdapter != null) {
             if (!bluetoothAdapter.isEnabled()) {
@@ -99,13 +118,10 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
         }
     }
 
-    @Override
-    public void onColorChanged(int color) {
-        currentColorValue = color;
-    }
+
 
     private class ConnectThread extends Thread {
-        private final BluetoothSocket mmSocket;
+
         private final BluetoothDevice mmDevice;
         private InputStream mmInStream;
         private OutputStream mmOutStream;
@@ -126,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
             } catch (IOException e) {
                 Log.e("ss", "Socket's create() method failed", e);
             }
-            mmSocket = tmp;
+            mainSocket = tmp;
         }
 
         public void run() {
@@ -136,11 +152,11 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
             try {
                 // Connect to the remote device through the socket. This call blocks
                 // until it succeeds or throws an exception.
-                mmSocket.connect();
+                mainSocket.connect();
             } catch (IOException connectException) {
                 // Unable to connect; close the socket and return.
                 try {
-                    mmSocket.close();
+                    mainSocket.close();
                 } catch (IOException closeException) {
                     Log.e("ss", "Could not close the client socket", closeException);
                 }
@@ -149,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
 
             // The connection attempt succeeded. Perform work associated with
 
-            new ConnectedThread(mmSocket).run();
+            new ConnectedThread(mainSocket,"0.0.0)").run();
             // the connection in a separate thread.
         }
 
@@ -158,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
         // Closes the client socket and causes the thread to finish.
         public void cancel() {
             try {
-                mmSocket.close();
+                mainSocket.close();
             } catch (IOException e) {
                 Log.e("ss", "Could not close the client socket", e);
             }
@@ -176,13 +192,14 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
         private final OutputStream mmOutStream;
+        private String mrgbValue;
         private byte[] mmBuffer; // mmBuffer store for the stream
 
-        public ConnectedThread(BluetoothSocket socket) {
+        public ConnectedThread(BluetoothSocket socket,String rgbValue) {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
-
+            mrgbValue = rgbValue;
             // Get the input and output streams; using temp objects because
             // member streams are final.
             try {
@@ -209,10 +226,7 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
                     // Send the obtained bytes to the UI activity.
-                    Message readMsg = handler.obtainMessage(
-                            MessageConstants.MESSAGE_READ, numBytes, -1,
-                            mmBuffer);
-                    readMsg.sendToTarget();
+
                 } catch (IOException e) {
                     Log.d("cc", "Input stream was disconnected", e);
                     break;
@@ -220,8 +234,8 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
             }
         }
         public void run() {
-            String ss = "255.255.255)";
-            write(ss.getBytes());
+
+            write(mrgbValue.getBytes());
         }
 
         // Call this from the main activity to send data to the remote device.
@@ -229,21 +243,9 @@ public class MainActivity extends AppCompatActivity implements ColorPicker.OnCol
             try {
                 mmOutStream.write(bytes);
 
-                // Share the sent message with the UI activity.
-                /*Message writtenMsg = handler.obtainMessage(
-                        MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
-                writtenMsg.sendToTarget();*/
             } catch (IOException e) {
                 Log.e("cc", "Error occurred when sending data", e);
 
-                // Send a failure message back to the activity.
-              /*  Message writeErrorMsg =
-                        handler.obtainMessage(MessageConstants.MESSAGE_TOAST);
-                Bundle bundle = new Bundle();
-                bundle.putString("toast",
-                        "Couldn't send data to the other device");
-                writeErrorMsg.setData(bundle);
-                handler.sendMessage(writeErrorMsg);*/
             }
         }
 
