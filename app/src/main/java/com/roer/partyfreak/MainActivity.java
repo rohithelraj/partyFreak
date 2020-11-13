@@ -17,6 +17,7 @@ import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
@@ -48,10 +49,43 @@ public class MainActivity extends AppCompatActivity {
         picker.setOldCenterColor(picker.getColor());
         // adds listener to the colorpicker which is implemented
         //in the activity
-
         //to turn of showing the old color
         picker.setShowOldCenterColor(false);
         TextView colorValue = findViewById(R.id.colorValue);
+        Switch musicGhost = findViewById(R.id.musicGhost);
+        Switch ledControl = findViewById(R.id.ledControl);
+        ledControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(!isChecked){
+                if(musicGhost.isChecked()){
+                    setColorInDevice("0.0.0)1)");
+                }
+                else{
+                    setColorInDevice("0.0.0)0)");
+                }
+
+            }
+        });
+
+        musicGhost.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(!isChecked){
+                if(ledControl.isChecked()){
+                    String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
+                    setColorInDevice(rgbValue+")0)");
+                }
+                else{
+                    setColorInDevice("0.0.0)0)");
+                }
+            }
+            else{
+                if(ledControl.isChecked()){
+                    String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
+                    setColorInDevice(rgbValue+")1)");
+                }
+                else{
+                    setColorInDevice("0.0.0)1)");
+                }
+            }
+        });
         ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
         colorValue.setText(""+picker.getColor());
         mainLayout.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +95,22 @@ public class MainActivity extends AppCompatActivity {
                 String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
 
                 colorValue.setText(rgbValue);
+                if(ledControl.isChecked()){
+                    if(musicGhost.isChecked()){
+                        setColorInDevice(rgbValue+")1)");
+                    }
+                    else{
+                        setColorInDevice(rgbValue+")0)");
+                    }
+                }
+                else{
+                    if(musicGhost.isChecked()){
+                        setColorInDevice("0.0.0)1)");
+                    }
+                    else{
+                        setColorInDevice("0.0.0)0)");
+                    }
+                }
                 //picker.getOnColorChangedListener();
                 setColorInDevice(rgbValue);
             }
@@ -79,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void setColorInDevice(String rgbValue) {
         if(mainSocket.isConnected()){
-            new ConnectedThread(mainSocket,rgbValue+")").run();
+            new ConnectedThread(mainSocket,rgbValue).run();
         }
         else{
             onBluettothClick();
@@ -99,17 +149,13 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode,resultCode,data);
         if(requestCode == 1){
             Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-            //bluetoothAdapter.getRemoteDevice()
             if (pairedDevices.size() > 0) {
                 // There are paired devices. Get the name and address of each paired device.
                 for (BluetoothDevice device : pairedDevices) {
                     String deviceName = device.getName();
                     if(deviceName.equalsIgnoreCase("HC-06")){
-                       // Intent intent = new Intent(this,MyBluetoothService.class);
-                        //startActivityForResult(intent,0);
                         new ConnectThread(device).run();
                     }
-                    String deviceHardwareAddress = device.getAddress(); // MAC address
                 }
             }
         }
