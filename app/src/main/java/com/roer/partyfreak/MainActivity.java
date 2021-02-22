@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_ENABLE_BT = 1;
     private static BluetoothSocket mainSocket;
     private static BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,69 +56,29 @@ public class MainActivity extends AppCompatActivity {
         Switch musicGhost = findViewById(R.id.musicGhost);
         Switch ledControl = findViewById(R.id.ledControl);
         ledControl.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(!isChecked){
-                if(musicGhost.isChecked()){
-                    setColorInDevice("0.0.0)1)");
-                }
-                else{
-                    setColorInDevice("0.0.0)0)");
-                }
-
+            if (!isChecked) {
+                setLedMode("ON)");
+            } else {
+                setLedMode("OFF)");
             }
         });
 
         musicGhost.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if(!isChecked){
-                if(ledControl.isChecked()){
-                    String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
-                    setColorInDevice(rgbValue+")0)");
-                }
-                else{
-                    setColorInDevice("0.0.0)0)");
-                }
-            }
-            else{
-                if(ledControl.isChecked()){
-                    String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
-                    setColorInDevice(rgbValue+")1)");
-                }
-                else{
-                    setColorInDevice("0.0.0)1)");
-                }
+            if (!isChecked) {
+                setMusicMode("MM)");
+            } else {
+                setMusicMode("MA)");
             }
         });
         ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
-        colorValue.setText(""+picker.getColor());
+        colorValue.setText("" + picker.getColor());
         mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String rgbValue = Color.red(picker.getColor())+"."+ Color.green(picker.getColor())+"."+Color.blue(picker.getColor());
-
+                String rgbValue = Color.red(picker.getColor()) + "." + Color.green(picker.getColor()) + "." + Color.blue(picker.getColor());
                 colorValue.setText(rgbValue);
-                if(ledControl.isChecked()){
-                    if(musicGhost.isChecked()){
-                        setColorInDevice(rgbValue+")1)");
-                    }
-                    else{
-                        setColorInDevice(rgbValue+")0)");
-                    }
-                }
-                else{
-                    if(musicGhost.isChecked()){
-                        setColorInDevice("0.0.0)1)");
-                    }
-                    else{
-                        setColorInDevice("0.0.0)0)");
-                    }
-                }
-                //picker.getOnColorChangedListener();
-                setColorInDevice(rgbValue);
+                setColorInDevice(rgbValue + ")");
             }
-
-
-
-
         });
         ImageView bluetoothDevices = findViewById(R.id.bluetoothDevices);
         bluetoothDevices.setOnClickListener(new View.OnClickListener() {
@@ -127,16 +88,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     public void setColorInDevice(String rgbValue) {
-        if(mainSocket.isConnected()){
-            new ConnectedThread(mainSocket,rgbValue).run();
-        }
-        else{
-            onBluettothClick();
+        if (mainSocket.isConnected()) {
+            new ConnectedThread(mainSocket, rgbValue).run();
         }
     }
 
-    public void onBluettothClick(){
+    public void setMusicMode(String musicMode) {
+        if (mainSocket.isConnected()) {
+            new ConnectedThread(mainSocket, musicMode).run();
+        }
+    }
+
+    public void setLedMode(String ledMode) {
+        if (mainSocket.isConnected()) {
+            new ConnectedThread(mainSocket, ledMode).run();
+        }
+    }
+
+    public void onBluettothClick() {
         if (bluetoothAdapter != null) {
             if (!bluetoothAdapter.isEnabled()) {
                 Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -144,34 +115,32 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode == 1){
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
             Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
             if (pairedDevices.size() > 0) {
                 // There are paired devices. Get the name and address of each paired device.
                 for (BluetoothDevice device : pairedDevices) {
                     String deviceName = device.getName();
-                    if(deviceName.equalsIgnoreCase("HC-06")){
+                    if (deviceName.equalsIgnoreCase("HC-06")) {
                         new ConnectThread(device).run();
                     }
                 }
             }
-        }
-        else{
+        } else {
 
         }
     }
-
-
-
     private class ConnectThread extends Thread {
 
         private final BluetoothDevice mmDevice;
         private InputStream mmInStream;
         private OutputStream mmOutStream;
         private byte[] mmBuffer;
+
         public ConnectThread(BluetoothDevice device) {
             // Use a temporary object that is later assigned to mmSocket
             // because mmSocket is final.
@@ -211,10 +180,9 @@ public class MainActivity extends AppCompatActivity {
 
             // The connection attempt succeeded. Perform work associated with
 
-            new ConnectedThread(mainSocket,"0.0.0)").run();
+            new ConnectedThread(mainSocket, "0.0.0)").run();
             // the connection in a separate thread.
         }
-
 
 
         // Closes the client socket and causes the thread to finish.
@@ -234,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
         // ... (Add other message types here as needed.)
     }
+
     private class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final InputStream mmInStream;
@@ -241,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         private String mrgbValue;
         private byte[] mmBuffer; // mmBuffer store for the stream
 
-        public ConnectedThread(BluetoothSocket socket,String rgbValue) {
+        public ConnectedThread(BluetoothSocket socket, String rgbValue) {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -262,7 +231,8 @@ public class MainActivity extends AppCompatActivity {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
-        public void read(){
+
+        public void read() {
             mmBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
 
@@ -279,8 +249,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        public void run() {
 
+        public void run() {
             write(mrgbValue.getBytes());
         }
 
