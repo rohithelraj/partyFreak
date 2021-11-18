@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Blink Speed"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/musicGhost"
+        app:layout_constraintStart_toStartOf="@+id/ledControl"
+        app:layout_constraintTop_toBottomOf="@+id/musicGhost" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="272dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/musicGhost"
+        app:layout_constraintStart_toStartOf="@+id/ledControl"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Switch
+        android:id="@+id/musicGhost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:minHeight="48dp"
+        android:text="Music Ghost"
+        app:layout_constraintEnd_toEndOf="@+id/colorValue"
+        app:layout_constraintTop_toBottomOf="@+id/colorValue" />
+
+    <Switch
+        android:id="@+id/ledControl"
+        android:layout_width="73dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="10dp"
+        android:text="LED"
+        app:layout_constraintStart_toStartOf="@+id/colorValueLabel"
+        app:layout_constraintTop_toBottomOf="@+id/colorValueLabel" />
+
+    <TextView
+        android:id="@+id/colorValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_thin"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/valuebar"
+        app:layout_constraintTop_toBottomOf="@+id/valuebar" />
+
+    <TextView
+        android:id="@+id/colorValueLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Color Value"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/valuebar"
+        app:layout_constraintTop_toBottomOf="@+id/valuebar" />
+
+    <com.larswerkman.holocolorpicker.ValueBar
+        android:id="@+id/valuebar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        app:layout_constraintEnd_toEndOf="@+id/svbar"
+        app:layout_constraintStart_toStartOf="@+id/svbar"
+        app:layout_constraintTop_toBottomOf="@+id/svbar" />
+
+    <com.larswerkman.holocolorpicker.SVBar
+        android:id="@+id/svbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="@+id/picker"
+        app:layout_constraintStart_toStartOf="@+id/picker"
+        app:layout_constraintTop_toBottomOf="@+id/picker" />
+
+    <com.larswerkman.holocolorpicker.ColorPicker
+        android:id="@+id/picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/batteryStatus" />
+
+    <TextView
+        android:id="@+id/selectDevice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/roboto_thin"
+        android:text="Devices"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/bluetoothDevices"
+        app:layout_constraintStart_toStartOf="@+id/bluetoothDevices"
+        app:layout_constraintTop_toBottomOf="@+id/bluetoothDevices" />
+
+    <TextView
+        android:id="@+id/batteryStatus"
+        android:layout_width="57dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/roboto_thin"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+    <ImageView
+        android:id="@+id/bluetoothDevices"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="16dp"
+        android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/select_device"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="41dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="66dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/glasses_icon" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
